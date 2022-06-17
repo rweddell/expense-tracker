@@ -1,7 +1,5 @@
 from django.test import TestCase
 from django.urls import reverse
-
-# from unittest import TestCase
 from restapi import models
 
 
@@ -24,13 +22,13 @@ class TestModel(TestCase):
 class TestViews(TestCase):
     def test_expense_create(self):
         payload = {
-            "amount": "50",
+            "amount": 50.0,
             "merchant": "AT&T",
             "description": "cell phone subscription",
-            "category": "utilties",
+            "category": "utilities",
         }
         res = self.client.post(
-            reverse("restapi:expense_list_create"), payload, format="json"
+            reverse("restapi:expense-list-create"), payload, format="json"
         )
         self.assertEqual(201, res.status_code)
         json_res = res.json()
@@ -41,9 +39,20 @@ class TestViews(TestCase):
         self.assertIsInstance(json_res["id"], int)
 
     def test_expense_list(self):
-        res = self.client.get(reverse("restapi:expense_list_create"), format="json")
+        res = self.client.get(reverse("restapi:expense-list-create"), format="json")
         self.assertEqual(200, res.status_code)
         json_res = res.json()
         self.assertIsInstance(json_res, list)
         expenses = models.Expense.objects.all()
         self.assertEqual(len(expenses), len(json_res))
+
+    def test_expense_create_required_fields_missing(self):
+        payload = {
+            "merchant": "AT&T",
+            "description": "cell phone subscription",
+            "category": "utilities",
+        }
+        res = self.client.post(
+            reverse("restapi:expense-list-create"), payload, format="json"
+        )
+        self.assertEqual(400, res.status_code)
