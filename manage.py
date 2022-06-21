@@ -6,7 +6,7 @@ import pdb
 
 
 def main():
-    pdb.set_trace()
+    # pdb.set_trace()
     """Run administrative tasks."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "expense_tracker.settings")
     try:
