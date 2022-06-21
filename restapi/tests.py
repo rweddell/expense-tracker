@@ -2,6 +2,8 @@ from django.test import TestCase
 from django.urls import reverse
 from restapi import models
 from django.contrib.auth.models import User
+from rest_framework.test import APIClient
+from rest_framework_api_key.models import APIKey
 
 
 class TestModel(TestCase):
@@ -22,8 +24,11 @@ class TestModel(TestCase):
 
 class TestViews(TestCase):
     def setUp(self):
-        User.objects.create_user("test1234", "testuser@example.com", "1234")
-        self.client.login(username="test1234", password="1234")
+        # User.objects.create_user("test1234", "testuser@example.com", "1234")
+        # self.client.login(username="test1234", password="1234")
+        api_key, key = APIKey.objects.create_key(name="expense-service")
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION=f"API-key {key}")
 
     def test_expense_create(self):
         payload = {

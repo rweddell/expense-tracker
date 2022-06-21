@@ -2,3 +2,4 @@ django
 pre-commit
 djangorestframework
 django-filter
+djangorestframework-api-key
